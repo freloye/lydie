@@ -20,23 +20,23 @@
       height:100vh;
     }
 
-    /* Fond flouté */
     .background{
       position:fixed;
       inset:0;
       background:url("pochette-lydie.png") center center / cover no-repeat;
       filter:blur(18px) brightness(0.35);
       transform:scale(1.1);
+      animation:bgZoom 18s ease-in-out infinite alternate;
     }
 
-    /* Overlay */
     .overlay{
       position:fixed;
       inset:0;
-      background:radial-gradient(circle at center, rgba(255,255,255,0.04), rgba(0,0,0,0.7));
+      background:
+        radial-gradient(circle at center, rgba(255,230,190,0.12), rgba(0,0,0,0.78)),
+        linear-gradient(120deg, rgba(255,220,160,0.08), rgba(255,255,255,0.02));
     }
 
-    /* Contenu principal */
     .container{
       position:relative;
       z-index:2;
@@ -47,14 +47,21 @@
       justify-content:center;
       align-items:center;
       padding:20px;
+      animation:fadeIn 3s ease;
     }
 
     h1{
-      font-size:clamp(2.2rem, 5vw, 4rem);
+      font-size:clamp(2.5rem, 6vw, 4.5rem);
       margin-bottom:10px;
       text-align:center;
       color:#f6d5a7;
-      text-shadow:0 0 20px rgba(255,215,170,0.5);
+      text-shadow:
+        0 0 20px rgba(255,215,170,0.7),
+        0 0 45px rgba(255,180,100,0.35);
+      opacity:0;
+      transform:translateY(25px);
+      animation:titleAppear 2s ease forwards;
+      animation-delay:1.2s;
     }
 
     .subtitle{
@@ -62,10 +69,11 @@
       margin-bottom:40px;
       text-align:center;
       color:#f3e7d6;
-      opacity:0.9;
+      opacity:0;
+      animation:fadeSubtitle 2s ease forwards;
+      animation-delay:2s;
     }
 
-    /* Vinyle */
     .disc-container{
       position:relative;
       width:min(70vw, 420px);
@@ -76,16 +84,31 @@
       margin-bottom:40px;
     }
 
+    .disc-container::before{
+      content:"";
+      position:absolute;
+      inset:-18px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(255,215,160,0.35), transparent 62%);
+      filter:blur(10px);
+      animation:haloPulse 3.5s ease-in-out infinite;
+    }
+
     .disc{
       width:100%;
       height:100%;
       border-radius:50%;
       background:url("pochette-lydie.png") center center / cover no-repeat;
-      animation:spin 18s linear infinite;
       box-shadow:
-        0 0 40px rgba(0,0,0,0.7),
-        0 0 25px rgba(255,220,180,0.25);
+        0 0 40px rgba(0,0,0,0.8),
+        0 0 35px rgba(255,220,180,0.35),
+        inset 0 0 30px rgba(0,0,0,0.35);
       position:relative;
+      transform:scale(0.2);
+      opacity:0;
+      animation:
+        introDisc 2.5s ease-out forwards,
+        spin 18s linear infinite 2.5s;
     }
 
     .disc::after{
@@ -98,17 +121,7 @@
       top:50%;
       left:50%;
       transform:translate(-50%, -50%);
-      box-shadow:0 0 10px rgba(0,0,0,0.3);
-    }
-
-    @keyframes spin{
-      from{ transform:rotate(0deg); }
-      to{ transform:rotate(360deg); }
-    }
-
-    audio{
-      width:min(90vw, 500px);
-      opacity:0.92;
+      box-shadow:0 0 10px rgba(0,0,0,0.4);
     }
 
     .footer{
@@ -116,11 +129,110 @@
       text-align:center;
       font-size:0.95rem;
       color:#f3e7d6;
-      opacity:0.8;
+      opacity:0;
+      animation:fadeSubtitle 2s ease forwards;
+      animation-delay:3s;
+    }
+
+    audio{
+      opacity:0;
+      pointer-events:none;
+      position:absolute;
+      bottom:-100px;
+    }
+
+    .start-button{
+      display:none;
+      position:fixed;
+      z-index:10;
+      left:50%;
+      bottom:35px;
+      transform:translateX(-50%);
+      border:1px solid rgba(255,220,170,0.8);
+      background:rgba(0,0,0,0.55);
+      color:#f6d5a7;
+      padding:14px 22px;
+      border-radius:999px;
+      font-family:Georgia, serif;
+      font-size:1rem;
+      cursor:pointer;
+      box-shadow:0 0 25px rgba(255,210,160,0.25);
+      backdrop-filter:blur(8px);
+    }
+
+    .start-button.show{
+      display:block;
+      animation:fadeIn 1s ease;
+    }
+
+    @keyframes spin{
+      from{ transform:rotate(0deg); }
+      to{ transform:rotate(360deg); }
+    }
+
+    @keyframes introDisc{
+      0%{
+        transform:scale(0.2) rotate(-180deg);
+        opacity:0;
+        filter:blur(12px);
+      }
+
+      70%{
+        transform:scale(1.05) rotate(10deg);
+        opacity:1;
+        filter:blur(0px);
+      }
+
+      100%{
+        transform:scale(1);
+        opacity:1;
+        filter:blur(0px);
+      }
+    }
+
+    @keyframes titleAppear{
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    @keyframes fadeSubtitle{
+      to{
+        opacity:0.9;
+      }
+    }
+
+    @keyframes fadeIn{
+      from{
+        opacity:0;
+      }
+      to{
+        opacity:1;
+      }
+    }
+
+    @keyframes bgZoom{
+      from{
+        transform:scale(1.08);
+      }
+      to{
+        transform:scale(1.18);
+      }
+    }
+
+    @keyframes haloPulse{
+      0%,100%{
+        opacity:0.45;
+        transform:scale(0.96);
+      }
+      50%{
+        opacity:0.9;
+        transform:scale(1.05);
+      }
     }
 
     @media (max-width:700px){
-
       .disc-container{
         width:85vw;
         height:85vw;
@@ -128,10 +240,6 @@
 
       .subtitle{
         margin-bottom:25px;
-      }
-
-      audio{
-        width:95vw;
       }
     }
   </style>
@@ -154,7 +262,7 @@
       <div class="disc"></div>
     </div>
 
-    <audio controls autoplay>
+    <audio id="player" autoplay>
       <source src="chanson-lydie.mp3" type="audio/mpeg">
       Votre navigateur ne supporte pas l'audio HTML5.
     </audio>
@@ -164,6 +272,49 @@
     </div>
 
   </div>
+
+  <button id="startButton" class="start-button">
+    Lancer la chanson
+  </button>
+
+  <script>
+    window.addEventListener("load", () => {
+
+      const audio = document.getElementById("player");
+      const startButton = document.getElementById("startButton");
+
+      function fadeInAudio(){
+        audio.volume = 0;
+
+        let v = 0;
+
+        const fade = setInterval(() => {
+          v += 0.02;
+          audio.volume = Math.min(v, 1);
+
+          if(v >= 1){
+            clearInterval(fade);
+          }
+        }, 120);
+      }
+
+      function startMusic(){
+        audio.play().then(() => {
+          fadeInAudio();
+          startButton.classList.remove("show");
+        }).catch(() => {
+          startButton.classList.add("show");
+        });
+      }
+
+      startMusic();
+
+      startButton.addEventListener("click", () => {
+        startMusic();
+      });
+
+    });
+  </script>
 
 </body>
 </html>
